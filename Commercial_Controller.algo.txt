@@ -107,7 +107,7 @@ SEQUENCE SortFLOORList using COLUMN and DIRECTION and FLOORList
 END SEQUENCE
 
 SEQUENCE Obstructed using Elevator and COLUMN
-       READ Captor FROM door
+       READ Captor FROM Door
        IF Obstructed
            RETURN TRUE
        ELSE RETURN FALSE
