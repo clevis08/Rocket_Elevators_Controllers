@@ -1,0 +1,153 @@
+SEQUENCE Battery using FLOOR
+         FOR EACH COLUMN IN COLUMNS
+              IF FLOOR =< 1 THEN
+                 CALL CallELEVATOR with COLUMN and FLOOR and DIRECTION
+              IF FLOOR =< 20 AND >=1 THEN
+                 CALL CallELEVATOR with COLUMN and FLOOR and DIRECTION
+              IF FLOOR =< 40 AND >= 1 THEN
+                 CALL CallELEVATOR with COLUMN and FLOOR and DIRECTION
+              IF FLOOR =< 60 AND >= 1 THEN
+                 CALL CallELEVATOR with COLUMN and FLOOR and DIRECTION
+         END FOR
+END SEQUENCE
+
+SEQUENCE CallELEVATOR using COLUMN and CURRENTELEVATOR and FLOOR and DIRECTION
+   IF CURRENTELEVATOR IS NULL
+       CALL ActivationButton with COLUMN and FLOOR and DIRECTION
+       CALL FindELEVATOR with COLUMN and FLOOR and DIRECTION - RETURNING Elevator
+       SET CURRENTELEVATOR = Elevator
+  END IF
+  CALL RequestELEVATOR with COLUMN and FLOOR and CURRENTELEVATOR
+  CALL OperateELEVATOR with COLUMN and CURRENTELEVATOR
+END SEQUENCE
+
+
+SEQUENCE ActivationButton using COLUMN and FLOOR and DIRECTION
+   CALL FindButton with COLUMN and FLOOR and DIRECTION - RETURNING ActivationButton
+   SET Button Active
+END SEQUENCE
+
+SEQUENCE DesactivateButton using COLUMN and FLOOR and DIRECTION
+   CALL FindButton with COLUMN and FLOOR and DIRECTION - RETURNING Button
+   SET Button INACTIVE
+END SEQUENCE
+
+SEQUENCE FindButton using COLUMN and FLOOR and DIRECTION
+   FOR EACH Button IN Buttons
+       IF FLOOR = ButtonFLOOR AND DIRECTION = ButtonDIRECTION
+       THEN RETURN Button
+   END FOR
+END SEQUENCE
+
+SEQUENCE ActivateInsideButton using COLUM and CURRENTFLOOR and Elevator
+ CALL FindActiveInsideButton with COLUMN and CURRENTFLOOR and Elevator - RETURNING Button
+ SET Button Active
+END SEQUENCE
+
+SEQUENCE DeactivateInsideButton using COLUM and CURRENTFLOOR and ELEVATOR
+ CALL FindActiveInsideButton with FLOOR and Elevator - RETURNING Button
+ SET Button Inactive
+END SEQUENCE
+
+SEQUENCE FindActiveInsideButton using COLUM and CURRENTFLOOR and ELEVATOR
+  FOR EACH ActiveInsideButton IN ActiveInsideButtons
+      IF CURRENTFLOOR = ActiveInsideButtonFLOOR
+      THEN RETURN ActivateInsideButton
+  END FOR
+END SEQUENCE
+
+SEQUENCE FindElevator using FLOOR and DIRECTION
+   WHILE Elevator NOT Found
+       FOR EACH Elevator IN Elevators
+           IF FLOOR = Elevator.CURRENTFLOOR AND Elevator.Status = Stopped OR Elevator.Direction = Direction THEN
+                   RETURN Elevator
+               ELSE IF Elevator.Status = Idle THEN
+                    RETURN Elevator
+               ELSE IF Elevator.Status = Idle AND FLOOR = Elevator.CURRENTFLOOR THEN
+                   RETURN Elevator
+               ELSE IF FLOOR > Elevator.CURRENTFLOOR AND Elevator.Direction AND Elevator.Direction = GoingUp AND Elevator.Direction = GoingUp THEN
+                   RETURN Elevator
+               ELSE IF FLOOR < Elevator.CURRENTFLOOR AND Elevator.Direction = GoingDown AND Elevator.Direction = GoingDown THEN
+                   RETURN Elevator
+           END IF
+       END FOR
+   END WHILE
+END SEQUENCE
+
+SEQUENCE OperateELEVATOR using COLUMN and Elevator
+   READ RequestedFLOOR FROM Elevator.FLOORList
+   IF shortFLOORList IS NOT EMPTY THEN
+   IF Elevator.CURRENTFLOOR IS RequestedFLOOR THEN
+       CALL OpenDOOR with COLUMN and Elevator
+       REMOVE RequestedFLOOR FROM Elevator.FLOORList
+       CALL DeactivateInsideButton with COLUM and CURRENTFLOOR and ELEVATOR - RETURNING InsideButton
+       REPEAT
+           CALL CloseDOOR with COLUMN and Elevator - RETURNING doorIsClosed
+       UNTIL doorIsClosed
+   IF Elevator.CURRENTFLOOR > RequestedFLOOR THEN
+       CALL MoveDown with COLUMN and RequestedFLOOR and Elevator
+   IF Elevator.CURRENTFLOOR < RequestedFLOOR THEN
+       CALL MoveUp with COLUMN and RequestedFLOOR and Elevator
+        ELSE
+             IF Elevator.CURRENTFLOOR > 1 THEN
+             CALL MoveDown with Elevator and 1 and COLUMN
+             ELSE IF Elevator.CURRENTFLOOR < 1 THEN
+             CALL MoveUp with Elevator and 1 and COLUMN
+   END IF
+END SEQUENCE
+
+SEQUENCE RequestElevator using COLUMN and RequestedFLOOR and Elevator
+   ADD RequestedFLOOR TO Elevator.FLOORList
+   CALL SortFLOORList with FLOORList and COLUMN - RETURNING SortedFLOORList
+   SET Elevator.FLOORList TO SortedFLOORList
+END SEQUENCE
+
+SEQUENCE SortFLOORList using COLUMN and DIRECTION and FLOORList
+   SORT Elevator.FLOORList BY Elevator.Direction THEN RETURN FLOORList
+END SEQUENCE
+
+SEQUENCE Obstructed using Elevator and COLUMN
+       READ Captor FROM Door
+       IF Obstructed
+           RETURN TRUE
+       ELSE RETURN FALSE
+   END SEQUENCE
+
+
+   SEQUENCE Overweight using COLUMN and Elevator
+       READ Weight FROM Balance
+       IF Weight > MaxWeight THEN
+           RETURN TRUE
+       ELSE RETURN FALSE
+       END IF
+   END SEQUENCE
+
+SEQUENCE OpenDOOR using Elevator and COLUMN
+   CALL DeactivateButton with COLUMN and CURRENTFLOOR and ElevatorDIRECTION - RETURNING Button
+   COMPUTE slideDoor
+   INIT Timer TO 5 Seconds
+END SEQUENCE
+
+   SEQUENCE CloseDOOR using COLUMN and Elevator
+   IF Door IS Closing AND NOT Obstructed OR NOT Overweight THEN
+       RETURN TRUE
+   ELSE
+       RETURN FALSE
+   END IF
+END SEQUENCE
+
+SEQUENCE MoveDown using COLUMN and RequestedFLOOR and Elevator
+   REPEAT
+       COMPUTE CURRENTFLOOR = |FLOOR - 1|
+       SET Elevator.Display = CURRENTFLOOR
+   UNTIL CURRENTFLOOR IS FLOOR
+   CALL RequestElevator with COLUMN and FLOOR and Elevator
+END SEQUENCE
+
+SEQUENCE MoveUp using COLUMN and RequestedFLOOR and Elevator
+   REPEAT
+       COMPUTE CURRENTFLOOR = |FLOOR + 1|
+       SET Elevator.Display = CURRENTFLOOR
+   UNTIL CURRENTFLOOR IS FLOOR
+   CALL RequestElevator with Elevator and FLOOR and COLUMN
+END SEQUENCE
