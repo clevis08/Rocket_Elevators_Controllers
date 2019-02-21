@@ -1,151 +1,161 @@
-//SCENARIO #1
-
 class Column {
-    constructor(NumberFLOOR, NumberELEVATOR){ // 
-        this.NumberFLOOR = NumberFLOOR;
-        this.NumberELEVATOR = NumberELEVATOR;
-        this.elevatorLIST =[];
+    constructor(nbFloor, nbElevator){
+      this.nbFloor = nbFloor;
+      this.nbElevator = nbElevator;
+      this.elevatorList = [];
 
-        for (let i = 0; i < this.NumberELEVATOR; i++) {
-            let elevator = NEW ELEVATOR(i+1,NumberFLOOR)
-            this.elevatorLIST.push(elevator);
-        }    
+
+      for (let i = 0; i < this.nbElevator; i++) {
+             let elevator = new Elevator(i+1,nbFloor)
+             this.elevatorList.push(elevator);
+        }
+    }
+}
+class Button{
+    constructor (direction, requestFloor) {
+        this.direction = direction;
+        this.requestFloor = requestFloor;
+        this.activateButton = false;
     }
 }
 
-class Button {
-    constructor(DIRECTION, RequestFLOOR) {
-        this.DIRECTION = DIRECTION;
-        this.RequestFLOOR = RequestFLOOR;
-        this.ActivateButton = false;
+class InsideButton{
+    constructor (floor) {
+        this.floor = floor;
+        this.status = "desctivated";
+
     }
 }
-
-class InsideButton {
-    constructor (FLOOR) {
-        this.FLOOR = FLOOR;
-        this.Status = "Desactivated";
-    }
-}
-
 class ElevatorController {
-    constructor(NumberFLOOR, NumberELEVATOR) {
-        this.NumberFLOOR = NumberFLOOR;
-        this.NumberELEVATOR = NumberELEVATOR;
-        this.Column = new Column(NumberFLOOR, NumberELEVATOR);
-        this.button_list = [new Button()];
+    constructor(nbFloor, nbElevator) {
+      this.nbFloor = nbFloor;
+      this.nbElevator = nbElevator;
+      this.column = new Column(nbFloor, nbElevator);
+      this.buttonList = [new Button()];
+
+    }
+
+
+    RequestElevator(floorNumber, direction) {
+        var selected_elevator = this.FindElevator(floorNumber, direction);
+        selected_elevator.addFloorToList(floorNumber);
+        selected_elevator.activateInsideButton(floorNumber);
+    }
+
+
+    RequestFloor(elevator, floorNumber) {
+        elevator.activateInsideButton(floorNumber);
+        elevator.addFloorToList(floorNumber);
+        elevator.move_next();
+
+    }
+    FindElevator(FloorNumber, direction) {
+        var distanceFloor = 999;
+        var selected_elevator = null;
+        for (var i = 0; i < this.column.elevatorList.length; i++) {
+          var differenceFloor = Math.abs(FloorNumber - this.column.elevatorList[i].currentFloor);
+            if (differenceFloor < distanceFloor) {
+              distanceFloor = differenceFloor;
+              selected_elevator =  this.column.elevatorList[i];
+            }
+       }
+       return selected_elevator;
     }
 }
 
-RequestELEVATOR(NumberFLOOR) {
-    elevator.activateInsideButton(NumberFLOOR);
-    elevator.addFLOORtoList(NumberFLOOR);
-    elevator.move_next();
-}
-
-FindELEVATOR(NumberFLOOR) {
-    var DistanceFLOOR = 999;
-    var SelectedELEVATOR = null;
-    for (var i = 0; i < this.Column.elevatorList.length; i++) {
-        var DifferenceFLOOR = Math.abs(NumberFLOOR - this.Column.elevatorList [i].currentFLOOR);
-        if (DifferenceFLOOR < DistanceFLOOR) {
-            DistanceFLOOR = DifferenceFLOOR;
-            SelectedELEVATOR = this.Column.elevatorList[i];
-        }
-        return SelectedELEVATOR;
-    }
-}
-
-class ELEVATOR {
-    constructor(NumberELEVATOR, NumberFLOOR) {
-        this.NumberELEVATOR - NumberELEVATOR;
+class Elevator {
+    constructor(elevator_number, nbFloor) {
+        this.elevator_number = elevator_number;
         this.direction = "NONE";
-        this.status - "idle";
-        this.FLOORList = [];
-        this.button_list = [];
-        for (var i = 0; i < NumberFLOOR; i++) {
-            this.button_list.push(new InsideButton(i));
+        this.status = "idle";
+        this.floorList = [];
+        this.buttonList = [];
+        for (var i = 0; i < nbFloor; i++) {
+            this.buttonList.push(new InsideButton(i));
         }
-        this.currentFLOOR = 1;
+        this.currentFloor = 1;
     }
     move_next(){
-        let FLOORList = this.FLOORList
-        let NumberFLOOR = FLOORList.shift();
-        if (this.currentFLOOR > NumberFLOOR){
-            this.moveDOWN(NumberFLOOR);
+        let floorList = this.floorList
+        let floorNumber = floorList.shift();
+        if (this.currentFloor > floorNumber){
+            this.moveDown(floorNumber);
         }
-        else if (this.currentFLOOR < NumberFLOOR){
-            this.moveUP(NumberFLOOR);
+        else if (this.currentFloor < floorNumber){
+            this.moveUp(floorNumber);
         }
         else {
-            this.OpenDOOR();
+            this.OpenDoor();
         }
     }
-    moveDOWN(NumberFLOOR) {
-        console.log ("ELEVATOR GOING DOWN");
-        this.DIRECTION = 'down';
-        this.status = 'moving';
+    moveDown(floorNumber) {
+        console.log ("Elevator is going down");
+        this.direction = 'down';
+        this.status = 'Moving';
         let interval = setInterval(() => {
-            this.currentFLOOR = this.currentFLOOR - 1
-            console.log(this.currentFLOOR) 
-                if (this.currentFLOOR = NumberFLOOR) {
-                    clearInterval(interval)
-                    console.log("ARRIVED AT THE FLOOR" + this.currentFLOOR)
-                    this.OpenDOOR()
-                }
-            }, 1000)
-        }        
-    moveUp(NumberFLOOR) {
-        console.log ("Elevator is going up");
-        this.DIRECTION = 'UP';
-        this.status = 'MOVING';
-         let interval = setInterval(() => {
-            this.currentFLOOR = this.currentFLOOR + 1
-            console.log(this.currentFLOOR)
-                if (this.currentFLOOR == NumberFLOOR) {
-                    clearInterval(interval)
-                    console.log("Arrived at floor " + this.currentFLOOR)
-                    this.OpenDOOR()
-                }
-            }, 1000)
-        }
-        addFLOORtoList(NumberFLOOR){
-            this.FLOORList.push(NumberFLOOR);
-            if (this.DIRECTION = "UP"){
-                this.FLOORList.sort();
-                console.log(this.FLOORList)
+            this.currentFloor = this.currentFloor - 1
+            console.log(this.currentFloor)
+            if (this.currentFloor == floorNumber) {
+                clearInterval(interval)
+                console.log("Arrived at floor " + this.currentFloor)
+                this.OpenDoor()
             }
-            else of (this.DIRECTION = "DOWN"){
-                this.FLOORList.sort().reverse();
-                  console.log(this.FLOORList)
-            }
-        }
-        
-        OpenDOOR(){
-            console.log("OPEN DOOR AT THE FLOOR" + this.currentFLOOR)
-            this.status = 'OpenDOOR';
-            setTimeout(() => {
-                this.closeDOOR()
-            }, 5000);
-        }
+        }, 1000)
+    }
 
-        closeDOOR(){
-            console.log("DOOR CLOSED");
-            this.status = 'closeDOOR';
-            if (this.FLOORList.length > 0) {
-                this.move_next()
+    moveUp(floorNumber) {
+        console.log ("Elevator is going up");
+        this.direction = 'up';
+        this.status = 'Moving';
+        let interval = setInterval(() => {
+            this.currentFloor = this.currentFloor + 1
+            console.log(this.currentFloor)
+            if (this.currentFloor == floorNumber) {
+                clearInterval(interval)
+                console.log("Arrived at floor " + this.currentFloor)
+                this.OpenDoor()
             }
+        }, 1000)
+    }
+    addFloorToList(floorNumber){
+        this.floorList.push(floorNumber);
+        if (this.direction == "Up"){
+            this.floorList.sort();
+            console.log(this.floorList)
         }
-        activateInsideButton(NumberELEVATOR) {
-            console.log ("ACTIVATED BUTTON AT THE FLOOR" + NumberFLOOR);
-            if (this.RequestFLOOR = this.FLOORList) {
-                this.activateInsideButton = false;
-                }
-            if (this.RequestFLOOR < this.FLOORList){
-                this.moveUP();
-                }
-            else if (this.RequestFLOOR > this.FLOORList){
-                this.moveDOWN();
-                }
+        else if (this.direction == "Down"){
+         this.floorList.sort().reverse();
+           console.log(this.floorList)
         }
+    }
+
+    OpenDoor(){
+        console.log("Opening door on floor " + this.currentFloor)
+        this.status = 'open_door';
+        setTimeout(() => {
+          this.closeDoor()
+        }, 5000);
+    }
+
+    closeDoor(){
+        console.log("Closing door");
+        this.status = 'close_door';
+        if (this.floorList.length > 0) {
+            this.move_next()
+        }
+    }
+    activateInsideButton(floorNumber) {
+        console.log ("Activated button at floor " + floorNumber);
+        if  (this.requestFloor == this.floorList){
+            this.activate_InsideButton = false;
+            }
+        if (this.requestFloor < this.floorList){
+            this.moveUp();
+            }
+        else if (this.requestFloor > this.floorList){
+            this.moveDown();
+            }
+    }
+    //}
 }
+const a = new ElevatorController(10,2);
