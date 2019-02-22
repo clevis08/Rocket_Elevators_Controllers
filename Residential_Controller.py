@@ -1,105 +1,75 @@
-class Column:
-    def __init__(self, NumberFLOOR, NumberELEVATOR):
-        self.numberfloor = NumberFLOOR
-        self.numberelevator = NumberELEVATORt
-        self.elevatorlist = []
-
-        for i = 0: i < self.numberelevator i+:
-    def let(elevator = NEWELEVATOR(i+1,NumberFLOOR)
-    self.elevatorlist(Elevator)
-    
-
-class Button:
-    def __init__(self, DIRECTION, RequestFLOOR):
-        self.direction = DIRECTION
-        self.requestfloor = RequestFLOOR
-        self.activatebutton = False
-
-class InsideButton:
-    def __init__(self, FLOOR):
-        self.floor = FLOOR
-        self.status= "Desactivated"
-
-class ElevatorController:
-    def __init__(self, NumberFLOOR, NumberELEVATOR):
-        self.numberfloor = NumberFLOOR
-        self.numberelevator = NumberELEVATOR
-        self.column = column
-        self.elevatorlist = []
-        self.floorlist = []
-        self.elevatorv = elevator
-        self.addFloortoList = addFloortoList
-        self.move_next 
-    
-    def RequestElevator(self, NumberFLOOR):
-        self.numberfloor = NumberFLOOR
-        self.elevator.activateInsideButton(NumberFLOOR)
-        self.elevatoor.move_next
+def mElevator(id, status, state, motion, position, door, requestUp, requestDown)
+for e in c.elevator:
+        if e.ID == ID:
+            e.status = status
+            e.state = state
+            e.motion = motion
+            e.position = position
+            e.up = up
+            e.down = requesdowntDown
 
 
-    def FindElevator(self, NumberFloor, DIRECTION):
-        numberfloor = NumberFloor
-        direction = DIRECTION
-        DistanceFLOOR = 999
-        SelectedELEVATOR = null
-        i = 0
-        for e in self.elevatorlist:
-        DifferenceFloor = abs(NumberFloor - self.column.elevatorlist [i].currentfloor)
-        if DifferenceFloor < DistanceFLOOR:
-            DistanceFLOOR = DifferenceFloor
-            SelectedELEVATOR = self.column.elevatorlist[i]
+###########################################################################################
 
-            else return (SelectedELEVATOR)
 
-class Elevator:
-    def __init__(self, NumberELEVATOR, NumberFLOOR):
-        self.numberelevator = NumberELEVATOR
-        self.numberfloor = NumberFLOOR
-        self.direction = 'NONE'
-        self.status = 'idle'
-        self.floorlist = []
-        self.buttonlist = []
-        self.currentfloor = currentfloor
-        for (i = 0 ; i < self.numberfloor i+):
-            self.buttonlist (NEWInsideButton(i))
-            self.currentfloor = 1
+class elevator(object):
+    def __init__(self, id):
+    self.id = ID
+    self.status = "on"
+    self.state = "idle"
+    self.motion = "idle"
+    self.position = 0
+    self.door = "closed"
+    self.requestUp = []
+    self.requestDown = []
 
-    def move_next():
-        def let(floorlist =self.floorlist):
-        def let(numberfloor = #Floorlist.shift()):
-        if (self.currentelevator < numberfloor):
-            self.moveDOWN(numberfloor)
-            self.moveDOWN(numberfloor)
+###########################################################################################
 
-        else if self.currentelevator < numberfloor
-            self.moveUP(numberfloor)
-        else
-            self.opendoor
 
-    def moveDown(numberfloor):
-    print 'elevator is going down'
-    self.direction = 'down'
-    self.status = 'moving'
-    #let interval = setInterval(() =>
-        self.currentfloor = self.currentfloor + 1
-        print(self.currentelevator)
-        if (self.currentelevator = numberfloor)
-           #Clear Interval(interval)
-           print('Arrived at the Floor' + currentfloor)
-           self.opendoor()
-       #1000 
-    
-    def moveUp(numberfloor)
-    print 'Elevator is going up'
-    self.direction = 'up'
-    self.status = 'moving'
-    #let interval - setInterval(() =>
-        self.currentfloor = self.currentfloor + 1
-        print(self.currentfloor)
-        if (self.currentfloor = numberfloor)
-        #clear interval(interval)
-        print('Arrived at the floor' + self.currentfloor)
-        self.opendoor()
+ #Variable 
+ inputnumberController = "0"
+ inputnumberFloor = "0"
+ inputnumberColumn = "0"
+ inputnumberElevator = "0"
+ inputnumberElevatorColumns = "0"
 
-        #1000
-        
+ ###########################################################################################
+
+ #INFORMATION
+ print("floor:")
+ print("..................")
+ inputnumberFloor = inout("Enter the number")
+ while not inputFloor.isdigit() or int(inputnumberFloor) <= 0:
+     inputnumberFloor = input("Number of floor superior >0 \n")
+print("\r")
+print("column:")
+ print("..................")
+ inputnumberColumn = input("Enter the number of columns >0 \n")
+    while not inputnumberColumn.isdigit() or int(inputnumberElevator) <= 0:
+         inputnumberColumn = input("Number of elevator > 0\n")
+print("\r")
+print("Elevator/colums")
+ print("..................")
+inputnumberElevatorColumns = input("Number of elevator/column\n")
+    while not inputnumberElevatorColumns.isdigit() or int(inputnumberElevatorColumns) <= 0:
+
+
+###########################################################################################
+
+
+numberFloor = int(inputnumberFloor)
+numberElevator = int(inputnumberElevator)
+numberColumn = int(numberColumn)
+numberElevatorColumn = int(inputnumberElevatorColumns)
+
+
+###########################################################################################
+
+#REQUEST
+def addRequest(self, numberFloor, requestList):
+    if requestList == "up"
+        if self.state == "idle":
+            self.state = 'up':
+        self.requestUp.append(numberFloor)
+        self.resquestUp.sort()
+        print("add floor" + str(numberFloor) +)
