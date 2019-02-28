@@ -1,67 +1,68 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers
-namespace Rocket_Elevators_Corporate_Controller
+using System.Timers;
+namespace Rocket_Elevator_Corporate_Controller
 {
-    public class Elevator
+
+    //CLASS ELEVATOR (VARIABLE)
+    public class ELEVATOR
     {
         public string ID{get; set;}
-        public string status{get; set;}
-        public string direction{get; set;}
-        public string motion{get; set;}
-        public int position{get; set;}
-        public int weight{get; set;}
+        public bool dSendor{get; set;}
+        public string door{get; set;}
         public List<int> requestUP{get; set;}
         public List<int> requestDown{get; set;}
-        public string door{get; set;}
-        public bool dSensor{get; set;}
+        public int position{get; set;}
+        public int weight{get; set;}
+        public string direction{get; set;}
+        public string status{get; set;}
+        public string motion{get; set;}
 
-        public Elevator(string iD)
-        { 
-            this.ID = iD; 
-            this.status = "On";
-            this.direction = "Idle";
-            this.motion = "Idle";
-            this.position = 0;
-            this.weight = 0;
+        public ELEVATOR(string ID)
+        {
+            this.ID = ID;
+            this.dSendor = false;
+            this.door = "closed";
             this.requestUP = new List<int>();
             this.requestDown = new List<int>();
-            this.door = "Closed";
-            this.dSensor = false;
+            this.position = 0;
+            this.weight = 0;
+            this.direction = "idle";
+            this.status = "on";
+            this.motion = "idle";
         }
     }
 
 public class Column
 {
-
-    public string ID{get; set;}
-    public List<Elevator> columnElevator{get; set;}
     public List<int> Serve{get; set;}
+    public List<Elevator> columnElevator{get; set;}
+    public string ID{get; set;}    
 
     public Column(string id)
     {
-        this.ID = id;
         this.columnElevator = new List<Elevator>();
         this.Serve = new List<int>();
+        this.ID = id;
     }
 }
 
 
-public class GroundfloorButton
+public class groundFloorButton
 {
 
-    public string ID{get;}
-    public int Floor{get;}
-    public string direction{get;}
-    public bool IsPressed{get; set;}
     public bool Light{get; set;}
+    public int Floor{get;}
+    public bool IsPressed{get; set;}
+    public string direction{get;}
+    public string ID{get;}
 
-    public GroundfloorButton(string id, int floor, string direction)
+    public groundFloorButton(string id, int floor, string direction)
     {
-        this.ID = id;
-        this.Floor = floor;
         this.direction = direction;
+        this.Floor = floor;
+        this.ID = id;
     }
 }
 
@@ -84,27 +85,27 @@ public class floorButton
 
 public class Battery
 {
-    public string Name{get;}
-    public List<Elevator> Elevators{get;}
-    public List<Column> Columns{get;}
-    public List<GroundfloorButton> GroundfloorButtons{get;}
-    public List<floorButton> floorButtons{get;}
-    public int maxWeight{get; private set;}
-    public string inputnumberFloor{get;private set;}
-    public string inputnumberColumns{get;private set;}
     public string inputnumberElevators{get; private set;}
     public string inputnumberElevatorsByColumns{get;private set;}
     public int numberFloor{get; private set;}
     public int numberColumns{get; private set;}
     public int numberElevators{get; private set;}
     public int numberElevatorsByColumns{get; private set;}
+    public string Name{get;}
+    public List<Elevator> Elevators{get;}
+    public List<Column> Columns{get;}
+    public List<groundFloorButton> groundFloorButtons{get;}
+    public List<floorButton> floorButtons{get;}
+    public int maxWeight{get; private set;}
+    public string inputnumberFloor{get;private set;}
+    public string inputnumberColumns{get;private set;}
 
     public Battery(string name)
     {
         this.Name = name;
         this.Elevators = new List<Elevator>();
         this.Columns = new List<Column>();
-        this.GroundfloorButtons = new List<GroundfloorButton>();
+        this.groundFloorButtons = new List<groundFloorButton>();
         this.floorButtons = new List<floorButton>();
         this.maxWeight = 4500;
     }
@@ -209,19 +210,17 @@ public class Battery
         }
        Console.WriteLine("\r");
     }
-////////////////////////////////////////////////////////////////////////////////////////////////
-    public void ShowGroundfloorButtons()
+    public void ShowgroundFloorButtons()
     {
         Console.WriteLine("Ground Floor Buttons:");
         int i = 0;
-        foreach (GroundfloorButton GfBtn in GroundfloorButtons)
+        foreach (groundFloorButton GfBtn in groundFloorButtons)
         {
             Console.WriteLine("ID: " + GfBtn.ID + ", Floor: " + GfBtn.Floor.ToString() + ", direction: " + string.Join(',',GfBtn.direction) + ", IsPressed: " + string.Join(',',GfBtn.IsPressed) + ", Light: " + string.Join(',',GfBtn.Light));
             i++;
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void ShowfloorButtons()
     {
         Console.WriteLine("Floor Buttons:");
@@ -233,7 +232,6 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void AddRequest(Elevator elevator, int FloorNumber, string ReqList)
     {
         switch (ReqList)
@@ -260,37 +258,33 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void weightSensor(Elevator elevator)
     {
     int weight = 200;
     elevator.weight = weight;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public int MoveUp(Elevator elevator)
     {
         if (elevator.motion == "Stop")
         {
-            Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", Started engine to go Up");
+            Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", go up");
         }
         elevator.motion = "Up";
         elevator.position +=1;
         return elevator.position;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public int MoveDown(Elevator elevator)
     {
        if (elevator.motion == "Stop"){
-        Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", Started engine to go Down");
+        Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", go down");
        }
        elevator.motion = "Down";
        elevator.position -=1;
        return elevator.position;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void doors(Elevator elevator)
     {
         if (elevator.motion == "Stop"){
@@ -302,10 +296,10 @@ public class Battery
         weightSensor(elevator);
         while (elevator.door == "Open"){
             if (elevator.weight >= maxWeight){
-                Console.WriteLine(">>> Alert! The elevator Max weight has been reached! Please get out!");
+                Console.WriteLine(">>> ATTENTION ! MAX WEIGHT");
             }
             else if (elevator.dSensor){
-                Console.WriteLine(">>> Alert! door sensor detected!");
+                Console.WriteLine(">>> SENSOR DETECTED!");
             }
             else{
                 elevator.door = "Closed";
@@ -316,7 +310,6 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void ServesCalls()
     {
         int i = 0;
@@ -331,11 +324,11 @@ public class Battery
                         {
                             if (elevator.motion != "Up")
                             {
-                                Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", Started engine to go Up");
+                                Console.WriteLine("> Elevator: " + elevator.ID.ToString() + ", go up");
                             }
                             if (MoveUp(elevator) == elevator.requestUP[0])
                             {
-                                Console.WriteLine(">> Elevator: " + elevator.ID + ", Has arrived at destination on floor: " + elevator.requestUP[0].ToString());
+                                Console.WriteLine(">> Elevator: " + elevator.ID + ", arrived at the destination " + elevator.requestUP[0].ToString());
                                 elevator.requestUP.RemoveAt(0);
                                 elevator.motion = "Stop";
                                 doors(elevator);
@@ -345,11 +338,11 @@ public class Battery
                         {
                             if (elevator.motion != "Down")
                             {
-                                Console.WriteLine("> Elevator: " + elevator.ID + ", Started engine to go Down");
+                                Console.WriteLine("> Elevator: " + elevator.ID + ", go down");
                             }
                             if (MoveDown(elevator) == elevator.requestUP[0])
                             {
-                                Console.WriteLine(">> Elevator: " + elevator.ID + ", Has arrived at destination on floor: " + elevator.requestUP[0].ToString());
+                                Console.WriteLine(">> Elevator: " + elevator.ID + ", arrived at the destination " + elevator.requestUP[0].ToString());
                                 elevator.requestUP.RemoveAt(0);
                                 elevator.motion = "Stop"; 
                                 doors(elevator); //Open the doors
@@ -362,7 +355,7 @@ public class Battery
                         ){
                             if (MoveUp(elevator) == elevator.requestUP[0])
                             {
-                                Console.WriteLine(">> Elevator: " + elevator.ID + ", Has arrived at destination on floor: " + elevator.requestUP[0].ToString());
+                                Console.WriteLine(">> Elevator: " + elevator.ID + ", arrived at the destination: " + elevator.requestUP[0].ToString());
                                 elevator.requestUP.RemoveAt(0);
                                 elevator.motion = "Stop";
                                 doors(elevator);
@@ -375,7 +368,7 @@ public class Battery
                         {
                             if (elevator.requestDown.Any())
                             {
-                                elevator.direction = "Down"; //It will be treated in the next iteration of the loop. We want to treat it in the Down section now. 
+                                elevator.direction = "Down"; 
                             }
                             else if (!elevator.requestDown.Any())
                             {
@@ -455,8 +448,7 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-    private void RequestElevator(int FloorNumber, string direction)
+    private void requestElevator(int FloorNumber, string direction)
     {
         List<Elevator> AvailableElevators = new List<Elevator>();
         bool OnTheWay_U = false;
@@ -525,7 +517,6 @@ public class Battery
                 }
             }
                 
-////////////////////////////////////////////////////////////////////////////////////////////////
             foreach (Elevator AvailableElevator in AvailableElevators)
             {
                 if (AvailableElevator.direction == direction)
@@ -574,7 +565,6 @@ public class Battery
                 }
             }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
             foreach (Elevator AvailableElevator in AvailableElevators)
             {
                 eleDif = Math.Abs(AvailableElevator.position - FloorNumber);
@@ -596,7 +586,6 @@ public class Battery
                 }
             }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
             foreach (Elevator AvailableElevator in AvailableElevators)
             {
                 eleDif = Math.Abs(AvailableElevator.position - FloorNumber);
@@ -633,7 +622,7 @@ public class Battery
         }
         else if (AvailableElevators.Count() == 0)
         {
-            foreach (GroundfloorButton GfBtn in GroundfloorButtons)
+            foreach (groundFloorButton GfBtn in groundFloorButtons)
             {
                 if (GfBtn.Floor == FloorNumber && GfBtn.direction == direction)
                 {
@@ -647,8 +636,7 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-    public void RequestFloor(Elevator elevator, int RequestedFloor)
+    public void requestFloor(Elevator elevator, int RequestedFloor)
     {
         Console.WriteLine("> Inside Panel, Request Detected: Elevator: " + elevator.ID + ", Floor: " + RequestedFloor.ToString());
         Console.WriteLine(">> ...");
@@ -706,12 +694,11 @@ public class Battery
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void ListenOutsidePanel()
     {
         int floor;
         string direction;
-        foreach (GroundfloorButton GfBtn in GroundfloorButtons)
+        foreach (groundFloorButton GfBtn in groundFloorButtons)
         {
             if (GfBtn.IsPressed == true)
             {
@@ -719,13 +706,12 @@ public class Battery
                 floor = GfBtn.Floor;
                 direction = GfBtn.direction;
                 GfBtn.IsPressed = false;
-                RequestElevator(floor, direction);
+                requestElevator(floor, direction);
             }
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-    public void ListenFloorPanel()
+    public void listenFloorpanel()
     {
         Elevator elevator;
         int floor;
@@ -737,25 +723,23 @@ public class Battery
                 elevator = fBtn.Elevator;
                 floor = fBtn.Floor;
                 fBtn.IsPressed = false;
-                RequestFloor(elevator, floor);
+                requestFloor(elevator, floor);
             }
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
     public void SystemInit()
     {
         int i = 1;
         int a = 1;
         int n = 1;
-        double b = Math.Floor((double)numberFloor/(double)numberColumns);       //To lower value cause no overlap so 16 in this case
+        double b = Math.Floor((double)numberFloor/(double)numberColumns);
         int z = (int)b;
         int tempZ;
         int tempA;
 
         Console.WriteLine("                    System Initialization                   ");
         Console.WriteLine("---------------------------------------");
-////////////////////////////////////////////////////////////////////////////////////////////////
         i = 1;
         while (i <= numberElevators)
         {
@@ -765,7 +749,6 @@ public class Battery
             i++;;
         }
         
-////////////////////////////////////////////////////////////////////////////////////////////////
         i = 1;
         while (i <= numberColumns)
         {
@@ -775,17 +758,14 @@ public class Battery
             i++;;
         }
         
-////////////////////////////////////////////////////////////////////////////////////////////////
-        i = 2;
+                i = 2;
         while (i <= numberFloor)
         {
             string ID_Up = "GfBtn_Floor" + i.ToString();
-            GroundfloorButton btn = new GroundfloorButton(ID_Up, i, "UP");
-            GroundfloorButtons.Add(btn);
+            groundFloorButton btn = new groundFloorButton(ID_Up, i, "UP");
+            groundFloorButtons.Add(btn);
             i++;;
         }
-
-////////////////////////////////////////////////////////////////////////////////////////////////        
         i = 2;
         while (i <= numberElevators)
         {
@@ -794,8 +774,6 @@ public class Battery
             floorButtons.Add(iB);
             i++;
         }
-
-////////////////////////////////////////////////////////////////////////////////////////////////        
         i = 0;
         foreach (Column column in Columns)
         {
@@ -814,8 +792,6 @@ public class Battery
                 }
             }
         }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
         i = 1;
         while (i <= numberFloor)
         {
@@ -830,11 +806,11 @@ public class Battery
             }
             i++;
         }
-      Console.WriteLine("- LISTS CREATED");
-      Console.WriteLine("- ELEVATORS READY");
-      Console.WriteLine("> SYSTEM READY");
+      Console.WriteLine("- list create");
+      Console.WriteLine("- elevator OK");
+      Console.WriteLine("> system OK");
       Console.WriteLine("---------------------------------------\n");
    }
 }
 
-}
+}   
