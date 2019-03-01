@@ -9,11 +9,11 @@ namespace Rocket_Elevators_Corporate_Controller
     class Program
     {
         static void Main(string[] args)
-        {// battery prop.
+        {
             ElevatorController Sanch = new ElevatorController(85, 4, 5);
-            Console.WriteLine("Starting initial Battery : Vrooom! ");
-            Console.WriteLine("Column number is : " + Sanch.numberColumns);
-            Console.WriteLine("Battery name is :  " + Sanch);
+            Console.WriteLine("Starting initialisation battery ");
+            Console.WriteLine("The number of the column : " + Sanch.numberColumns);
+            Console.WriteLine("The name of the battery:  " + Sanch);
 
             Sanch.battery_1.columnList[1].elevatorList[0].numberFloor = 1;
             Sanch.battery_1.columnList[1].elevatorList[1].numberFloor = 23;
@@ -22,14 +22,14 @@ namespace Rocket_Elevators_Corporate_Controller
             Sanch.battery_1.columnList[1].elevatorList[4].numberFloor = 42;
 
 
-            Sanch.AssignElevator(24);
-            Sanch.AssignElevator(28);
+            Sanch.assignElevator(24);
+            Sanch.assignElevator(28);
 
 
             Console.ReadLine();
         }
     }
-// CONTROLLER
+// CONTROLLER *REQUEST ELEVATOR/BATTERY/ASSIGN/ 
     class ElevatorController
     {
         public int requestFloor;
@@ -47,23 +47,23 @@ namespace Rocket_Elevators_Corporate_Controller
 
         public void RequestElevator(int numberFloor, int requestnumberFloor)
         {
-            Console.WriteLine("someone requested an elevator at floor: " + requestnumberFloor);
-            var column_1 = battery_1.FindColumn(requestnumberFloor);
+            Console.WriteLine("SOMEON REQUEST AN ELEVATOR AT THE FLOOR : " + requestnumberFloor);
+            var column_1 = battery_1.findColumn(requestnumberFloor);
             var nearElevator = column_1.FindnearElevator(requestnumberFloor);
             column_1.createElevators(numberFloor);
             Console.WriteLine("CallButtonLightOn");
-            Console.WriteLine("Returning " + nearElevator.elevatorName + " of Column number " + battery_1.numberColumns);
+            Console.WriteLine("Returning " + nearElevator.elevatorName + " OF COLUMN NUMBER " + battery_1.numberColumns);
 
             nearElevator.AddFloorToList(requestnumberFloor);
             nearElevator.MoveNext();
         }
 
-        public void AssignElevator(int requestnumberFloor)
+        public void assignElevator(int requestnumberFloor)
 
 
         {
             Console.WriteLine("Requested Floor at : " + requestnumberFloor);
-            var column_1 = battery_1.FindColumn(requestnumberFloor);
+            var column_1 = battery_1.findColumn(requestnumberFloor);
 
             var nearElevator = column_1.FindnearElevator(requestnumberFloor);
 
@@ -72,7 +72,7 @@ namespace Rocket_Elevators_Corporate_Controller
             nearElevator.MoveNext();
         }
     }
-//batterie
+//PRIMARY CLASS FOR BATTERY ! LIST COLUMN / mPANEL / FIND COLUMNS / CREATE COLUMNS
     class Battery
     {
 
@@ -86,11 +86,11 @@ namespace Rocket_Elevators_Corporate_Controller
             this.numberColumns = numberColumns;
             this.numberElvbyCol = numberElvbyCol;
             columnList = new List<Column>();
-            this.CreateColumns();
+            this.createColumns();
 
         }
-        //WHERE COLUMn    
-        public void CreateColumns()
+        //WHERE IS THE COLUMN    
+        public void createColumns()
         {
             for (int i = 0; i < this.numberColumns; i++)
             {
@@ -100,13 +100,13 @@ namespace Rocket_Elevators_Corporate_Controller
 
         }
 
-        public int DisplayMainPanel(int requestnumberFloor)
+        public int displaymPanel(int requestnumberFloor)
         {
 
             return requestnumberFloor;
         }
 
-        public Column FindColumn(int requestFloor)
+        public Column findColumn(int requestFloor)
 
         {
             if (requestFloor <= 22)
@@ -216,7 +216,7 @@ namespace Rocket_Elevators_Corporate_Controller
         public Elevator(string elevatorName, int numberFloor)
         {
             this.elevatorName = elevatorName;
-            this.direction = "Stopped";
+            this.direction = "STOP";
             this.status = "Idle";
             this.numberFloor = numberFloor;
             requestfloorList = new List<int>();
@@ -257,9 +257,9 @@ namespace Rocket_Elevators_Corporate_Controller
 
         public void opencloseDoors()
         {
-            Console.WriteLine("Ding!  Open door");
+            Console.WriteLine("Open door");
             System.Threading.Thread.Sleep(1000);
-            Console.WriteLine("Ding!  Closing Door");
+            Console.WriteLine("Closing Door");
             System.Threading.Thread.Sleep(1000);
         }
  
@@ -283,7 +283,7 @@ namespace Rocket_Elevators_Corporate_Controller
                 Console.WriteLine(numberFloor);
                 if (numberFloor == 1)
                 {
-                    Console.WriteLine("you are at floor " + numberFloor);
+                    Console.WriteLine("YOU ARE NOW AT " + numberFloor);
                     
                 }
             }
