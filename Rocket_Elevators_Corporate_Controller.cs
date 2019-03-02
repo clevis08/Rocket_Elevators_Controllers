@@ -1,35 +1,22 @@
+/////////////////////////////////////////////////////////////
+//////////////         CODEBOXX WEEK 3      /////////////////
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Timers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Rocket_Elevators_Corporate_Controller
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            ElevatorController Sanch = new ElevatorController(85, 4, 5);
-            Console.WriteLine("Starting initialisation battery ");
-            Console.WriteLine("The number of the column : " + Sanch.numberColumns);
-            Console.WriteLine("The name of the battery:  " + Sanch);
-
-            Sanch.battery_1.columnList[1].elevatorList[0].numberFloor = 1;
-            Sanch.battery_1.columnList[1].elevatorList[1].numberFloor = 23;
-            Sanch.battery_1.columnList[1].elevatorList[2].numberFloor = 33;
-            Sanch.battery_1.columnList[1].elevatorList[3].numberFloor = 40;
-            Sanch.battery_1.columnList[1].elevatorList[4].numberFloor = 42;
-
-
-            Sanch.assignElevator(24);
-            Sanch.assignElevator(28);
-
-
-            Console.ReadLine();
-        }
-    }
-// CONTROLLER *REQUEST ELEVATOR/BATTERY/ASSIGN/ 
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+// CONTROLLER *REQUEST ELEVATOR/BATTERY/ASSIGN/
+/////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////// 
     class ElevatorController
     {
         public int requestFloor;
@@ -72,62 +59,35 @@ namespace Rocket_Elevators_Corporate_Controller
             nearElevator.MoveNext();
         }
     }
-//PRIMARY CLASS FOR BATTERY ! LIST COLUMN / mPANEL / FIND COLUMNS / CREATE COLUMNS
-    class Battery
+
+    class Program
     {
-
-        public int numberFloors;
-        public int numberColumns;
-        public int numberElvbyCol;
-        public List<Column> columnList;
-        public Battery(int numberFloors, int numberColumns, int numberElvbyCol)
+        static void Main(string[] args)
         {
-            this.numberFloors = numberFloors;
-            this.numberColumns = numberColumns;
-            this.numberElvbyCol = numberElvbyCol;
-            columnList = new List<Column>();
-            this.createColumns();
+            ElevatorController Sanch = new ElevatorController(85, 4, 5);
+            Console.WriteLine("Starting initialisation battery ");
+            Console.WriteLine("The number of the column : " + Sanch.numberColumns);
+            Console.WriteLine("The name of the battery:  " + Sanch);
 
-        }
-        //WHERE IS THE COLUMN    
-        public void createColumns()
-        {
-            for (int i = 0; i < this.numberColumns; i++)
-            {
-                var columns = new Column(numberFloors, numberElvbyCol, "Column " + i);
-                this.columnList.Add(columns);
-            }
+            Sanch.battery_1.columnList[1].elevatorList[0].numberFloor = 1;
+            Sanch.battery_1.columnList[1].elevatorList[1].numberFloor = 23
+            Sanch.battery_1.columnList[1].elevatorList[2].numberFloor = 33;
+            Sanch.battery_1.columnList[1].elevatorList[3].numberFloor = 40;
+            Sanch.battery_1.columnList[1].elevatorList[4].numberFloor = 42;
 
-        }
 
-        public int displaymPanel(int requestnumberFloor)
-        {
+            Sanch.assignElevator(24);
+            Sanch.assignElevator(28);
 
-            return requestnumberFloor;
-        }
 
-        public Column findColumn(int requestFloor)
-
-        {
-            if (requestFloor <= 22)
-            {
-                return columnList[0];
-            }
-            else if (requestFloor >= 23 && requestFloor <= 43)
-            {
-                return columnList[1];
-            }
-            else if (requestFloor >= 44 && requestFloor <= 64)
-            {
-                return columnList[2];
-            }
-            else
-            {
-                return columnList[3];
-            }
+            Console.ReadLine();
         }
     }
-    // column
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+// column
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
         class Column
     {
         public int numberElevators;
@@ -188,7 +148,70 @@ namespace Rocket_Elevators_Corporate_Controller
             return elevatorList[nearElevator];
         }
     }
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+//PRIMARY CLASS FOR BATTERY ! LIST COLUMN / mPANEL / FIND COLUMNS / CREATE COLUMNS
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+    class Battery
+    {
+
+        public int numberFloors;
+        public int numberColumns;
+        public int numberElvbyCol;
+        public List<Column> columnList;
+        public Battery(int numberFloors, int numberColumns, int numberElvbyCol)
+        {
+            this.numberFloors = numberFloors;
+            this.numberColumns = numberColumns;
+            this.numberElvbyCol = numberElvbyCol;
+            columnList = new List<Column>();
+            this.createColumns();
+
+        }
+        //WHERE IS THE COLUMN    
+        public void createColumns()
+        {
+            for (int i = 0; i < this.numberColumns; i++)
+            {
+                var columns = new Column(numberFloors, numberElvbyCol, "Column " + i);
+                this.columnList.Add(columns);
+            }
+
+        }
+
+        public int displaymPanel(int requestnumberFloor)
+        {
+
+            return requestnumberFloor;
+        }
+
+        public Column findColumn(int requestFloor)
+
+        {
+            if (requestFloor <= 22)
+            {
+                return columnList[0];
+            }
+            else if (requestFloor >= 23 && requestFloor <= 43)
+            {
+                return columnList[1];
+            }
+            else if (requestFloor >= 44 && requestFloor <= 64)
+            {
+                return columnList[2];
+            }
+            else
+            {
+                return columnList[3];
+            }
+        }
+    }
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
     //call button
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
     class CallButton
     {
         public int requestFloor;
@@ -202,7 +225,11 @@ namespace Rocket_Elevators_Corporate_Controller
             this.activateButton = false;
         }
     }
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
     //elevator
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
     class Elevator
     {
 
@@ -288,12 +315,6 @@ namespace Rocket_Elevators_Corporate_Controller
                 }
             }
         }
-//UP
-        public void moveUP()
-        {
-            numberFloor++;
-            Console.WriteLine("MovingUp");
-        }
 // DOWN
         public void moveDown()
         {
@@ -305,6 +326,12 @@ namespace Rocket_Elevators_Corporate_Controller
         {
             requestfloorList.Add(requestnumberFloor);
             requestfloorList = requestfloorList.OrderByDescending(x => x).ToList();
+        }
+//UP
+        public void moveUP()
+        {
+            numberFloor++;
+            Console.WriteLine("MovingUp");
         }
     }
 }
